@@ -1,0 +1,10 @@
+---
+- name: Install a web server
+  hosts: webservers
+  user: admin
+  sudo: yes
+  vars:
+    - nginx_site_name: testsite
+  roles:
+    - common
+    - nginx

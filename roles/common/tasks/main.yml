@@ -1,0 +1,16 @@
+---
+- name: Update packages list
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Upgrade installed packages
+  apt: upgrade=dist
+
+- name: Install base programs
+  apt: name={{item}} state=present
+  with_items:
+  - htop
+  - ntp
+
+- name: Configure ntp
+  copy: src=ntp.conf dest=/etc/ntp.conf
+  notify: restart ntp

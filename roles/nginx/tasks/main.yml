@@ -1,0 +1,22 @@
+---
+- name: Update packages list
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install nginx
+  apt: name={{item}} state=present
+  with_items:
+  - nginx
+
+- name: Remove default nginx site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+
+- name: Copy nginx site config
+  copy: src={{nginx_site_name}} dest=/etc/nginx/sites-available/{{nginx_site_name}}
+  notify: restart nginx
+
+- name: Enable nginx site
+  file: src=/etc/nginx/sites-available/{{nginx_site_name}}
+        dest=/etc/nginx/sites-enabled/{{nginx_site_name}}
+        state=link
+  notify: restart nginx
